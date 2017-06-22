@@ -1,29 +1,27 @@
 package stopwatch;
 
 import java.awt.Font;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.util.concurrent.Executor;
-import java.util.concurrent.Executors;
 
+import javax.swing.DefaultListCellRenderer;
+import javax.swing.DefaultListModel;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JList;
+import javax.swing.JScrollPane;
 import javax.swing.SwingConstants;
-import javax.swing.Timer;
 
-public class View extends JFrame implements ActionListener, Runnable {
+
+public class View extends JFrame implements Runnable {
 	private JFrame f;
-	private Font fontHello, fontHelloMin, fontTime, fontTimeList, fontButton;
+	private Font fontHello, fontHelloMin, fontTime, fontLapsList, fontButton;
 	private JButton start, lap;
-	private JLabel timeCounter, timeOverall;
-	private Model licznik;
-	private Executor exec;
-	private Timer timer;
+	private JLabel timeCounter;
+	private JScrollPane listScrollPane;
+	private JList<String> laps;
+	private DefaultListModel<String> lapsList;
 	
 	public View() {
-		licznik= new Model();
 		f = new JFrame();
 		f.setTitle("Stoper");
 		f.setSize(1200, 900);
@@ -35,6 +33,7 @@ public class View extends JFrame implements ActionListener, Runnable {
 		fontHelloMin = new Font("Calbri", 1, 12);
 		fontTime = new Font("Calbri", 1, 50);
 		fontButton = new Font("Calbri", 1, 25);
+		fontLapsList = new Font("Calbri", 1, 25);
 		JLabel hello = new JLabel();
 		hello.setBounds(500, 70, 200, 50);
 		hello.setText("Stoper");
@@ -53,52 +52,75 @@ public class View extends JFrame implements ActionListener, Runnable {
 		start = new JButton("Start");
 		start.setBounds(400, 350, 150, 50);
 		start.setFont(fontButton);
-		start.addActionListener(this);
 		f.add(start);
 		lap = new JButton("Lap");
 		lap.setBounds(600, 350, 150, 50);
 		lap.setFont(fontButton);
 		f.add(lap);
+		lapsList = new DefaultListModel<>(); 
+		laps = new JList<String>(lapsList);
+//		laps.setBounds(400, 450, 400, 400);
+		laps.setFont(fontLapsList);
+//		listScrollPane.setViewportView(laps);
+		DefaultListCellRenderer renderer = (DefaultListCellRenderer)laps.getCellRenderer();  
+		renderer.setHorizontalAlignment(JLabel.CENTER);
+		f.add(laps);
+		listScrollPane = new JScrollPane(laps);
+		listScrollPane.setBounds(400, 450, 400, 400);
+		f.add(listScrollPane);
 		f.setVisible(true);
-		exec = Executors.newCachedThreadPool();
-		exec.execute(this);
-		timer = new Timer(30, new ActionListener() {
-            public void actionPerformed(ActionEvent evt) {
-                if (licznik.isGo()){
-/*                	if(licznik.getHours() == 0) timeCounter.setText(licznik.getMinutes() + ":" + licznik.getSeconds() + "," + licznik.getMiliSeconds());
-                	else timeCounter.setText(licznik.getHours()+ ":" + licznik.getMinutes() + ":" + licznik.getSeconds() + "," + licznik.getMiliSeconds());*/
-                	timeCounter.setText(licznik.getElapsedTime());
-                timeCounter.repaint();
-                
-                } 
-            }
-        });
-	}
-	
-	
-	@Override
-	public void actionPerformed(ActionEvent e) {
-		if (e.getSource().equals(start)) {				
-			if (licznik.isGo()){
-				licznik.setGo(false);
-				start.setText("Start");
-				timer.stop();
-			}
-			else {
-				exec.execute(licznik);
-				licznik.setZero();
-				licznik.setGo(true);	
-				start.setText("Stop");
-				timer.start();			
-			}
-		}
 	}
 
+	public JLabel getTimeCounter() {
+		return timeCounter;
+	}
+
+
+	public void setTimeCounter(JLabel timeCounter) {
+		this.timeCounter = timeCounter;
+	}
+
+
+	public JButton getStart() {
+		return start;
+	}
+
+
+	public void setStart(JButton start) {
+		this.start = start;
+	}
+
+
+	public JButton getLap() {
+		return lap;
+	}
+
+
+	public void setLap(JButton lap) {
+		this.lap = lap;
+	}
+
+	public JList<String> getLaps() {
+		return laps;
+	}
+
+	public void setLaps(JList<String> laps) {
+		this.laps = laps;
+	}
+
+	public DefaultListModel<String> getLapsList() {
+		return lapsList;
+	}
+
+	public void setLapsList(DefaultListModel<String> lapsList) {
+		this.lapsList = lapsList;
+	}
 
 	@Override
 	public void run() {
 		// TODO Auto-generated method stub
 		
 	}
+	
 
 }
