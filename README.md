@@ -1,4 +1,5 @@
-Stopwatch app written in Java Swing, using multithreading (Timer and Executor) (almost done).
+Stopwatch app written in Java Swing, using multithreading (Timer and Executor).
+See view1.png and view2.png
 
 Counts miliseconds, seconds, minutes, hours and laps' times. Resets after 24 h.
 Works almost the same as stopwatch in iPhone's.
